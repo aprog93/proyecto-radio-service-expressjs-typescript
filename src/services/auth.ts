@@ -6,6 +6,16 @@ import { User, AuthRequest, RegisterRequest, AuthResponse, UserRole } from '../t
 const JWT_SECRET = process.env.JWT_SECRET || 'radio-cesar-secret-key-change-in-production';
 
 /**
+ * Helper to convert Date to ISO string
+ */
+function toISOString(date: string | Date): string {
+  if (date instanceof Date) {
+    return date.toISOString();
+  }
+  return date;
+}
+
+/**
  * Servicio de autenticación con Prisma ORM
  */
 export class AuthService {
@@ -48,8 +58,8 @@ export class AuthService {
       avatar: user.avatar,
       bio: user.bio,
       isActive: user.isActive,
-      createdAt: user.createdAt.toISOString(),
-      updatedAt: user.updatedAt.toISOString(),
+      createdAt: toISOString(user.createdAt),
+      updatedAt: toISOString(user.updatedAt),
     });
 
     return {
@@ -94,8 +104,8 @@ export class AuthService {
       avatar: user.avatar,
       bio: user.bio,
       isActive: user.isActive,
-      createdAt: user.createdAt.toISOString(),
-      updatedAt: user.updatedAt.toISOString(),
+      createdAt: toISOString(user.createdAt),
+      updatedAt: toISOString(user.updatedAt),
     });
 
     return {
@@ -158,8 +168,8 @@ export class AuthService {
       avatar: user.avatar || undefined,
       bio: user.bio || undefined,
       isActive: user.isActive,
-      createdAt: user.createdAt.toISOString(),
-      updatedAt: user.updatedAt.toISOString(),
+      createdAt: toISOString(user.createdAt),
+      updatedAt: toISOString(user.updatedAt),
     };
   }
 
@@ -193,8 +203,8 @@ export class AuthService {
         avatar: existingUser.avatar || undefined,
         bio: existingUser.bio || undefined,
         isActive: existingUser.isActive,
-        createdAt: existingUser.createdAt.toISOString(),
-        updatedAt: existingUser.updatedAt.toISOString(),
+        createdAt: toISOString(existingUser.createdAt),
+        updatedAt: toISOString(existingUser.updatedAt),
       };
     }
 
@@ -212,8 +222,8 @@ export class AuthService {
       avatar: updatedUser.avatar || undefined,
       bio: updatedUser.bio || undefined,
       isActive: updatedUser.isActive,
-      createdAt: updatedUser.createdAt.toISOString(),
-      updatedAt: updatedUser.updatedAt.toISOString(),
+      createdAt: toISOString(updatedUser.createdAt),
+      updatedAt: toISOString(updatedUser.updatedAt),
     };
   }
 
@@ -235,8 +245,8 @@ export class AuthService {
       avatar: user.avatar || undefined,
       bio: user.bio || undefined,
       isActive: user.isActive,
-      createdAt: user.createdAt.toISOString(),
-      updatedAt: user.updatedAt.toISOString(),
+      createdAt: toISOString(user.createdAt),
+      updatedAt: toISOString(user.updatedAt),
     }));
   }
 
@@ -289,8 +299,8 @@ export class AuthService {
       avatar: updatedUser.avatar || undefined,
       bio: updatedUser.bio || undefined,
       isActive: updatedUser.isActive,
-      createdAt: updatedUser.createdAt.toISOString(),
-      updatedAt: updatedUser.updatedAt.toISOString(),
+      createdAt: toISOString(updatedUser.createdAt),
+      updatedAt: toISOString(updatedUser.updatedAt),
     };
   }
 }
