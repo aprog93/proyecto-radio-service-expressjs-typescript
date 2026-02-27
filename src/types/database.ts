@@ -6,12 +6,12 @@ export type UserRole = 'admin' | 'listener';
 
 export interface User {
   id: number;
-  email: string;
   password?: string;
+  email: string;
   displayName: string;
   role: UserRole;
-  avatar?: string;
-  bio?: string;
+  avatar?: string | null;
+  bio?: string | null;
   createdAt: string;
   updatedAt: string;
   isActive: boolean;
@@ -186,6 +186,8 @@ export interface CreateBlogRequest {
 export interface CreateNewsRequest {
   title: string;
   content: string;
+  author_id?: number;
+  image?: string;
   published?: boolean;
   expiresAt?: string;
 }

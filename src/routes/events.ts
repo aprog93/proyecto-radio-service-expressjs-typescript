@@ -53,7 +53,7 @@ export function createEventRouter(): Router {
   router.post('/', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
     try {
       const data: CreateEventRequest = req.body;
-      const event = await eventService.createEvent(data, req.userId);
+      const event = await eventService.createEvent(data, req.userId as number);
 
       res.status(201).json({
         success: true,
@@ -104,7 +104,7 @@ export function createEventRouter(): Router {
     try {
       const eventId = Number(req.params.id);
 
-      await eventService.registerUser(eventId, req.userId);
+      await eventService.registerUser(eventId, req.userId as number);
 
       res.status(201).json({
         success: true,
