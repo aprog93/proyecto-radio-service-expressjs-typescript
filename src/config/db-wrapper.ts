@@ -9,9 +9,9 @@ export class DatabaseWrapper {
   /**
    * Ejecuta una consulta SELECT y retorna la primera fila
    */
-  getOne<T = any>(sql: string, params: any[] = []): T | undefined {
+  getOne<T = unknown>(sql: string, params: unknown[] = []): T | undefined {
     try {
-      const results = this.db.exec(sql, params);
+      const results = this.db.exec(sql, params as (string | number | null | Uint8Array)[]);
       if (!results || results.length === 0 || results[0].values.length === 0) {
         return undefined;
       }
@@ -25,9 +25,9 @@ export class DatabaseWrapper {
   /**
    * Ejecuta una consulta SELECT y retorna todas las filas
    */
-  getAll<T = any>(sql: string, params: any[] = []): T[] {
+  getAll<T = unknown>(sql: string, params: unknown[] = []): T[] {
     try {
-      const results = this.db.exec(sql, params);
+      const results = this.db.exec(sql, params as (string | number | null | Uint8Array)[]);
       if (!results || results.length === 0 || results[0].values.length === 0) {
         return [];
       }
@@ -43,9 +43,9 @@ export class DatabaseWrapper {
   /**
    * Ejecuta una consulta INSERT/UPDATE/DELETE
    */
-  run(sql: string, params: any[] = []): { changes: number; lastID: number } {
+  run(sql: string, params: unknown[] = []): { changes: number; lastID: number } {
     try {
-      this.db.run(sql, params);
+      this.db.run(sql, params as (string | number | null | Uint8Array)[]);
       const changes = this.db.getRowsModified();
       // sql.js no proporciona lastID directamente, usar SELECT last_insert_rowid()
       const lastIdResult = this.db.exec('SELECT last_insert_rowid() as id');
@@ -63,7 +63,7 @@ export class DatabaseWrapper {
   /**
    * Cuenta el número de filas que coinciden con la consulta
    */
-  count(sql: string, params: any[] = []): number {
+  count(sql: string, params: unknown[] = []): number {
     const modifiedSql = `SELECT COUNT(*) as count FROM (${sql.replace(
       /^SELECT\s+.*?\s+FROM/i,
       'SELECT 1 FROM'

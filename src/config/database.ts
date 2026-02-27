@@ -8,6 +8,7 @@ import { DatabaseWrapper } from './db-wrapper.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_PATH = path.join(__dirname, '../../data/radio_cesar.db');
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let SQL: any;
 let db: SqlJsDatabase | null = null;
 let wrapped: DatabaseWrapper | null = null;

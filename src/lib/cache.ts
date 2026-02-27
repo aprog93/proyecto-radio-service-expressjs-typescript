@@ -9,10 +9,12 @@ interface CacheEntry<T> {
 }
 
 class Cache {
-  private store = new Map<string, CacheEntry<any>>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private store = new Map<string, CacheEntry<unknown>>();
   private ttl: number = 60000; // 60 seconds default
 
-  set(key: string, value: any, ttlSeconds?: number): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  set(key: string, value: unknown, ttlSeconds?: number): void {
     const expiresAt = Date.now() + (ttlSeconds || this.ttl);
     this.store.set(key, { data: value, expiresAt });
   }
