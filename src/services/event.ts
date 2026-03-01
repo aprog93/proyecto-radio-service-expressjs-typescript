@@ -1,5 +1,40 @@
 import { prisma } from '../config/prisma.js';
 import { Event, CreateEventRequest } from '../types/database.js';
+import { Prisma } from '../generated/prisma/index.js';
+
+/**
+ * Tipo interno para datos crudos de Event desde Prisma
+ */
+type PrismaEvent = {
+  id: number;
+  title: string;
+  description: string | null;
+  startDate: Date;
+  endDate: Date;
+  location: string | null;
+  image: string | null;
+  capacity: number | null;
+  registered: number;
+  author_id: number;
+  published: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+};
+
+/**
+ * Tipo para datos de actualización de evento
+ */
+type EventUpdateData = {
+  title?: string;
+  description?: string;
+  startDate?: Date;
+  endDate?: Date;
+  location?: string;
+  capacity?: number;
+  published?: boolean;
+  publishedAt?: Date | null;
+};
 
 /**
  * Servicio de gestión de eventos
@@ -17,7 +52,7 @@ export class EventService {
     const offset = (page - 1) * limit;
     const now = new Date();
 
-    const where: any = { published: true };
+    const where: Prisma.EventWhereInput = { published: true };
 
     if (upcomingOnly) {
       where.startDate = { gt: now };
@@ -125,7 +160,7 @@ export class EventService {
       }
     }
 
-    const updateData: any = {};
+    const updateData: EventUpdateData = {};
     if (data.title !== undefined) updateData.title = data.title;
     if (data.description !== undefined) updateData.description = data.description;
     if (data.startDate !== undefined) updateData.startDate = new Date(data.startDate);
@@ -242,7 +277,7 @@ export class EventService {
   /**
    * Formatea un evento para retornar
    */
-  private _formatEvent(event: any): Event {
+  private _formatEvent(event: PrismaEvent): Event {
     return {
       id: event.id,
       title: event.title,

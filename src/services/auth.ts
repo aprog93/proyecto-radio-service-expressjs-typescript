@@ -186,8 +186,8 @@ export class AuthService {
       throw new Error('Usuario no encontrado');
     }
 
-    // Construir objeto de actualización
-    const updateData: any = {};
+    // Construir objeto de actualización con tipos definidos
+    const updateData: Partial<Pick<User, 'displayName' | 'bio' | 'avatar'>> = {};
     if (data.displayName !== undefined) updateData.displayName = data.displayName;
     if (data.bio !== undefined) updateData.bio = data.bio;
     if (data.avatar !== undefined) updateData.avatar = data.avatar;

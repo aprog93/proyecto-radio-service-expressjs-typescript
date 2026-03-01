@@ -1,11 +1,19 @@
 import { Router, Request, Response } from 'express';
 import { ProductService } from '../services/product.js';
+import { AuthService } from '../services/auth.js';
 import { authenticateToken, requireAdmin } from '../middleware/authMiddleware.js';
 import { CreateProductRequest } from '../types/database.js';
 
 export function createProductRouter(): Router {
   const router = Router();
   const productService = new ProductService();
+  const authService = new AuthService();
+
+  // Inject authService for middleware
+  router.use((req: Request, _res: Response, next: Function) => {
+    req.authService = authService;
+    next();
+  });
 
   /**
    * GET /api/products

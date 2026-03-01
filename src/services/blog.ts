@@ -1,5 +1,41 @@
 import { prisma } from '../config/prisma.js';
 import { Blog, CreateBlogRequest } from '../types/database.js';
+import { Prisma } from '../generated/prisma/index.js';
+
+/**
+ * Tipo interno para datos crudos de Blog desde Prisma
+ */
+type PrismaBlog = {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string | null;
+  author_id: number;
+  category: string | null;
+  tags: string | null;
+  image: string | null;
+  published: boolean;
+  viewCount: number;
+  publishedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
+ * Tipo para datos de actualización de blog
+ */
+type BlogUpdateData = {
+  title?: string;
+  slug?: string;
+  content?: string;
+  excerpt?: string;
+  category?: string;
+  tags?: string | null;
+  image?: string;
+  published?: boolean;
+  publishedAt?: Date | null;
+};
 
 /**
  * Servicio de gestión de blogs
@@ -16,7 +52,7 @@ export class BlogService {
   ): Promise<{ blogs: Blog[]; total: number }> {
     const offset = (page - 1) * limit;
 
-    const where: any = { published: true };
+    const where: Prisma.BlogWhereInput = { published: true };
     if (category) where.category = category;
     if (search) {
       where.OR = [
@@ -129,7 +165,7 @@ export class BlogService {
       throw new Error('No tienes permiso para editar este blog');
     }
 
-    const updateData: any = {};
+    const updateData: BlogUpdateData = {};
     if (data.title !== undefined) {
       updateData.title = data.title;
       updateData.slug = this._generateSlug(data.title);
@@ -194,7 +230,7 @@ export class BlogService {
   /**
    * Formatea un blog para retornar
    */
-  private _formatBlog(blog: any): Blog {
+  private _formatBlog(blog: PrismaBlog): Blog {
     return {
       id: blog.id,
       title: blog.title,

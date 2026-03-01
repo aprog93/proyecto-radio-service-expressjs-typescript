@@ -90,8 +90,11 @@ export class DatabaseWrapper {
   /**
    * Convierte una fila de sql.js a un objeto
    */
-  private _rowToObject<T = any>(columns: string[], row: any[]): T {
-    const obj: any = {};
+  private _rowToObject<T>(
+    columns: string[], 
+    row: unknown[]
+  ): T {
+    const obj: Record<string, unknown> = {};
     columns.forEach((col, idx) => {
       obj[col] = row[idx];
     });

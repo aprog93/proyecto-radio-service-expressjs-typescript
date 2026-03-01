@@ -2,6 +2,38 @@ import { prisma } from '../config/prisma.js';
 import { UserProfile, UpdateProfileRequest } from '../types/database.js';
 
 /**
+ * Tipo interno para datos crudos de UserProfile desde Prisma
+ */
+type PrismaUserProfile = {
+  id: number;
+  userId: number;
+  firstName: string | null;
+  lastName: string | null;
+  phone: string | null;
+  address: string | null;
+  city: string | null;
+  country: string | null;
+  postalCode: string | null;
+  socialMedia: string | null;
+  preferences: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
+ * Tipo para datos de actualización de perfil
+ */
+type UserProfileUpdateData = {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  country?: string;
+  postalCode?: string;
+};
+
+/**
  * Servicio de gestión de perfiles de usuario
  */
 export class UserProfileService {
@@ -39,7 +71,7 @@ export class UserProfileService {
       throw new Error('Perfil no encontrado');
     }
 
-    const updateData: any = {};
+    const updateData: UserProfileUpdateData = {};
     if (data.firstName !== undefined) updateData.firstName = data.firstName;
     if (data.lastName !== undefined) updateData.lastName = data.lastName;
     if (data.phone !== undefined) updateData.phone = data.phone;
@@ -59,7 +91,7 @@ export class UserProfileService {
   /**
    * Formatea un perfil para retornar
    */
-  private _formatProfile(profile: any): UserProfile {
+  private _formatProfile(profile: PrismaUserProfile): UserProfile {
     return {
       id: profile.id,
       userId: profile.userId,

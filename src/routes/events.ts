@@ -1,12 +1,20 @@
 import { Router, Request, Response } from 'express';
 
 import { EventService } from '../services/event.js';
+import { AuthService } from '../services/auth.js';
 import { authenticateToken, requireAdmin } from '../middleware/authMiddleware.js';
 import { CreateEventRequest } from '../types/database.js';
 
 export function createEventRouter(): Router {
   const router = Router();
   const eventService = new EventService();
+  const authService = new AuthService();
+
+  // Inject authService for middleware
+  router.use((req: Request, _res: Response, next: Function) => {
+    req.authService = authService;
+    next();
+  });
 
   // GET / - Obtiene eventos publicados
   router.get('/', async (req: Request, res: Response) => {

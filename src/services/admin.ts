@@ -1,5 +1,28 @@
 import { prisma } from '../config/prisma.js';
-import { User } from '../types/database.js';
+import { User, UserRole } from '../types/database.js';
+import { Prisma } from '../generated/prisma/index.js';
+
+/**
+ * Interfaz para estadísticas del sistema
+ */
+export interface SystemStats {
+  totalUsers: number;
+  activeUsers: number;
+  admins: number;
+  listeners: number;
+  totalBlogs: number;
+  publishedBlogs: number;
+  totalNews: number;
+  publishedNews: number;
+  totalEvents: number;
+  publishedEvents: number;
+  totalProducts: number;
+  publishedProducts: number;
+  totalDonations: {
+    count: number;
+    amount: number;
+  };
+}
 
 /**
  * Servicio de administración y estadísticas
@@ -15,7 +38,7 @@ export class AdminService {
   ): Promise<{ users: User[]; total: number }> {
     const offset = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Prisma.UserWhereInput = {};
     if (search) {
       where.OR = [
         { email: { contains: search, mode: 'insensitive' } },
@@ -42,8 +65,20 @@ export class AdminService {
       prisma.user.count({ where }),
     ]);
 
+    // Map Prisma user to our User type (select only includes needed fields)
+    const formattedUsers: User[] = users.map((u) => ({
+      id: u.id,
+      email: u.email,
+      displayName: u.displayName,
+      role: u.role as UserRole,
+      avatar: u.avatar || undefined,
+      createdAt: u.createdAt.toISOString(),
+      updatedAt: u.createdAt.toISOString(),
+      isActive: u.isActive,
+    }));
+
     return {
-      users: users.map((u) => this._formatUser(u)),
+      users: formattedUsers,
       total,
     };
   }
@@ -51,7 +86,7 @@ export class AdminService {
   /**
    * Obtiene estadísticas globales del sistema
    */
-  async getStats(): Promise<any> {
+  async getStats(): Promise<SystemStats> {
     const [
       totalUsers,
       activeUsers,
@@ -114,21 +149,5 @@ export class AdminService {
       },
     });
     return result._sum?.amount || 0;
-  }
-
-  /**
-   * Formatea un usuario para retornar
-   */
-  private _formatUser(user: any): User {
-    return {
-      id: user.id,
-      email: user.email,
-      displayName: user.displayName,
-      role: user.role,
-      avatar: user.avatar || undefined,
-      createdAt: user.createdAt.toISOString(),
-      updatedAt: user.updatedAt?.toISOString() || user.createdAt.toISOString(),
-      isActive: user.isActive,
-    };
   }
 }

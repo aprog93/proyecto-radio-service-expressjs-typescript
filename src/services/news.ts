@@ -1,5 +1,35 @@
 import { prisma } from '../config/prisma.js';
 import { News, CreateNewsRequest } from '../types/database.js';
+import { Prisma } from '../generated/prisma/index.js';
+
+/**
+ * Tipo interno para datos crudos de News desde Prisma
+ */
+type PrismaNews = {
+  id: number;
+  title: string;
+  content: string;
+  author_id: number;
+  image: string | null;
+  published: boolean;
+  expiresAt: Date | null;
+  viewCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+};
+
+/**
+ * Tipo para datos de actualización de noticia
+ */
+type NewsUpdateData = {
+  title?: string;
+  content?: string;
+  image?: string;
+  published?: boolean;
+  publishedAt?: Date | null;
+  expiresAt?: Date | null;
+};
 
 /**
  * Servicio de gestión de noticias
@@ -16,7 +46,7 @@ export class NewsService {
     const offset = (page - 1) * limit;
     const now = new Date();
 
-    const where: any = {
+    const where: Prisma.NewsWhereInput = {
       published: true,
       OR: [
         { expiresAt: null },
@@ -142,7 +172,7 @@ export class NewsService {
       }
     }
 
-    const updateData: any = {};
+    const updateData: NewsUpdateData = {};
     if (data.title !== undefined) updateData.title = data.title;
     if (data.content !== undefined) updateData.content = data.content;
     if (data.image !== undefined) updateData.image = data.image;
@@ -188,7 +218,7 @@ export class NewsService {
   /**
    * Formatea una noticia para retornar
    */
-  private _formatNews(news: any): News {
+  private _formatNews(news: PrismaNews): News {
     return {
       id: news.id,
       title: news.title,

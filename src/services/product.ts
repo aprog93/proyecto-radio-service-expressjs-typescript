@@ -1,5 +1,35 @@
 import { prisma } from '../config/prisma.js';
 import { Product, CreateProductRequest } from '../types/database.js';
+import { Prisma } from '../generated/prisma/index.js';
+
+/**
+ * Tipo interno para datos crudos de Product desde Prisma
+ */
+type PrismaProduct = {
+  id: number;
+  name: string;
+  description: string | null;
+  price: number;
+  image: string | null;
+  category: string | null;
+  stock: number;
+  published: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
+ * Tipo para datos de actualización de producto
+ */
+type ProductUpdateData = {
+  name?: string;
+  description?: string;
+  price?: number;
+  image?: string;
+  category?: string;
+  stock?: number;
+  published?: boolean;
+};
 
 /**
  * Servicio de gestión de productos
@@ -16,7 +46,7 @@ export class ProductService {
   ): Promise<{ products: Product[]; total: number }> {
     const offset = (page - 1) * limit;
 
-    const where: any = { published: true };
+    const where: Prisma.ProductWhereInput = { published: true };
     if (category) where.category = category;
     if (search) {
       where.OR = [
@@ -86,7 +116,7 @@ export class ProductService {
       throw new Error('Producto no encontrado');
     }
 
-    const updateData: any = {};
+    const updateData: ProductUpdateData = {};
     if (data.name !== undefined) updateData.name = data.name;
     if (data.description !== undefined) updateData.description = data.description;
     if (data.price !== undefined) {
@@ -141,7 +171,7 @@ export class ProductService {
   /**
    * Formatea un producto para retornar
    */
-  private _formatProduct(product: any): Product {
+  private _formatProduct(product: PrismaProduct): Product {
     return {
       id: product.id,
       name: product.name,

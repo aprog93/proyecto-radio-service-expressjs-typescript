@@ -2,6 +2,22 @@ import { prisma } from '../config/prisma.js';
 import { Schedule } from '../types/database.js';
 
 /**
+ * Tipo interno para datos crudos de Schedule desde Prisma
+ */
+type PrismaSchedule = {
+  id: number;
+  title: string;
+  description: string | null;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  host: string | null;
+  image: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
  * Servicio de gestión de programación de radio
  */
 export class ScheduleService {
@@ -90,7 +106,7 @@ export class ScheduleService {
       throw new Error('Día inválido (0-6)');
     }
 
-    const updateData: any = {};
+    const updateData: Partial<Pick<Schedule, 'title' | 'description' | 'dayOfWeek' | 'startTime' | 'endTime' | 'host' | 'image'>> = {};
     if (data.title !== undefined) updateData.title = data.title;
     if (data.description !== undefined) updateData.description = data.description;
     if (data.dayOfWeek !== undefined) updateData.dayOfWeek = data.dayOfWeek;
@@ -123,7 +139,7 @@ export class ScheduleService {
   /**
    * Formatea una programación para retornar
    */
-  private _formatSchedule(schedule: any): Schedule {
+  private _formatSchedule(schedule: PrismaSchedule): Schedule {
     return {
       id: schedule.id,
       title: schedule.title,

@@ -8,8 +8,11 @@ import { DatabaseWrapper } from './db-wrapper.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_PATH = path.join(__dirname, '../../data/radio_cesar.db');
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let SQL: any;
+// SqlJs constructor type
+type SqlJsConstructor = Awaited<ReturnType<typeof initSqlJs>>;
+
+// SqlJs constructor - initialized lazily
+let SQL: SqlJsConstructor | null = null;
 let db: SqlJsDatabase | null = null;
 let wrapped: DatabaseWrapper | null = null;
 
@@ -26,6 +29,10 @@ export async function getDatabase(): Promise<DatabaseWrapper> {
     SQL = await initSqlJs();
   }
 
+  if (!SQL) {
+    throw new Error('Failed to initialize SQL.js');
+  }
+
   // Cargar base de datos existente o crear nueva
   let data: Uint8Array | undefined;
   if (fs.existsSync(DB_PATH)) {
@@ -35,13 +42,13 @@ export async function getDatabase(): Promise<DatabaseWrapper> {
   db = new SQL.Database(data);
 
   // Habilitar foreign keys
-  db!.run('PRAGMA foreign_keys = ON');
+  db.run('PRAGMA foreign_keys = ON');
 
   // Inicializar schema
-  initializeSchema(db!);
+  initializeSchema(db);
 
   // Wrappear la base de datos
-  wrapped = new DatabaseWrapper(db!);
+  wrapped = new DatabaseWrapper(db);
 
   console.log(`✓ Base de datos conectada: ${DB_PATH}`);
   return wrapped;

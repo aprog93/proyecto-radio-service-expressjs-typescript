@@ -517,8 +517,300 @@ All protected endpoints require JWT Bearer token:
       get: {
         summary: 'Get playback history',
         tags: ['Station'],
+        parameters: [
+          { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
+          { name: 'limit', in: 'query', schema: { type: 'integer', default: 50 } },
+        ],
         responses: {
           '200': { description: 'History data' },
+        },
+      },
+    },
+    // ============================================
+    // AzuraCast Complete API Endpoints
+    // ============================================
+    '/api/station/status': {
+      get: {
+        summary: 'Get system status',
+        tags: ['AzuraCast'],
+        responses: {
+          '200': { description: 'System status data' },
+        },
+      },
+    },
+    '/api/station/time': {
+      get: {
+        summary: 'Get server time',
+        tags: ['AzuraCast'],
+        responses: {
+          '200': { description: 'Server time' },
+        },
+      },
+    },
+    '/api/station/nowplaying-global': {
+      get: {
+        summary: 'Get now playing for all stations',
+        tags: ['AzuraCast'],
+        responses: {
+          '200': { description: 'Global now playing data' },
+        },
+      },
+    },
+    '/api/station/now-playing/art': {
+      get: {
+        summary: 'Get current playing song artwork',
+        tags: ['AzuraCast'],
+        responses: {
+          '200': { description: 'Artwork URL' },
+        },
+      },
+    },
+    '/api/station/info': {
+      get: {
+        summary: 'Get station public information',
+        tags: ['AzuraCast'],
+        responses: {
+          '200': { description: 'Station info' },
+        },
+      },
+    },
+    '/api/station/stations': {
+      get: {
+        summary: 'Get list of all stations',
+        tags: ['AzuraCast'],
+        responses: {
+          '200': { description: 'List of stations' },
+        },
+      },
+    },
+    '/api/station/media/{mediaId}/art': {
+      get: {
+        summary: 'Get artwork for specific media',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'mediaId', in: 'path', required: true, schema: { type: 'string' } },
+        ],
+        responses: {
+          '200': { description: 'Media artwork' },
+        },
+      },
+    },
+    '/api/station/ondemand': {
+      get: {
+        summary: 'Get on-demand media list',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
+          { name: 'limit', in: 'query', schema: { type: 'integer', default: 25 } },
+        ],
+        responses: {
+          '200': { description: 'On-demand media list' },
+        },
+      },
+    },
+    '/api/station/ondemand/{mediaId}': {
+      get: {
+        summary: 'Get specific on-demand media',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'mediaId', in: 'path', required: true, schema: { type: 'integer' } },
+        ],
+        responses: {
+          '200': { description: 'On-demand item' },
+        },
+      },
+    },
+    '/api/station/ondemand/{mediaId}/download': {
+      get: {
+        summary: 'Get download URL for on-demand media',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'mediaId', in: 'path', required: true, schema: { type: 'integer' } },
+        ],
+        responses: {
+          '200': { description: 'Download URL' },
+        },
+      },
+    },
+    '/api/station/podcasts': {
+      get: {
+        summary: 'Get list of podcasts',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
+          { name: 'limit', in: 'query', schema: { type: 'integer', default: 25 } },
+        ],
+        responses: {
+          '200': { description: 'Podcasts list' },
+        },
+      },
+    },
+    '/api/station/podcasts/{podcastId}': {
+      get: {
+        summary: 'Get specific podcast',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'podcastId', in: 'path', required: true, schema: { type: 'integer' } },
+        ],
+        responses: {
+          '200': { description: 'Podcast data' },
+        },
+      },
+    },
+    '/api/station/podcasts/{podcastId}/episodes': {
+      get: {
+        summary: 'Get podcast episodes',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'podcastId', in: 'path', required: true, schema: { type: 'integer' } },
+          { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
+          { name: 'limit', in: 'query', schema: { type: 'integer', default: 25 } },
+        ],
+        responses: {
+          '200': { description: 'Episodes list' },
+        },
+      },
+    },
+    '/api/station/podcasts/{podcastId}/episodes/{episodeId}': {
+      get: {
+        summary: 'Get specific podcast episode',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'podcastId', in: 'path', required: true, schema: { type: 'integer' } },
+          { name: 'episodeId', in: 'path', required: true, schema: { type: 'integer' } },
+        ],
+        responses: {
+          '200': { description: 'Episode data' },
+        },
+      },
+    },
+    '/api/station/podcast-art/{podcastId}': {
+      get: {
+        summary: 'Get podcast artwork',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'podcastId', in: 'path', required: true, schema: { type: 'integer' } },
+        ],
+        responses: {
+          '200': { description: 'Podcast artwork' },
+        },
+      },
+    },
+    '/api/station/episode-art/{podcastId}/{episodeId}': {
+      get: {
+        summary: 'Get episode artwork',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'podcastId', in: 'path', required: true, schema: { type: 'integer' } },
+          { name: 'episodeId', in: 'path', required: true, schema: { type: 'integer' } },
+        ],
+        responses: {
+          '200': { description: 'Episode artwork' },
+        },
+      },
+    },
+    '/api/station/episode-media/{podcastId}/{episodeId}': {
+      get: {
+        summary: 'Get episode media URL',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'podcastId', in: 'path', required: true, schema: { type: 'integer' } },
+          { name: 'episodeId', in: 'path', required: true, schema: { type: 'integer' } },
+        ],
+        responses: {
+          '200': { description: 'Episode media URL' },
+        },
+      },
+    },
+    '/api/station/schedule': {
+      get: {
+        summary: 'Get station schedule',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'day', in: 'query', schema: { type: 'integer' } },
+        ],
+        responses: {
+          '200': { description: 'Schedule data' },
+        },
+      },
+    },
+    '/api/station/streamers': {
+      get: {
+        summary: 'Get list of streamers/DJs',
+        tags: ['AzuraCast'],
+        responses: {
+          '200': { description: 'Streamers list' },
+        },
+      },
+    },
+    '/api/station/streamer-art/{streamerId}': {
+      get: {
+        summary: 'Get streamer avatar',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'streamerId', in: 'path', required: true, schema: { type: 'integer' } },
+        ],
+        responses: {
+          '200': { description: 'Streamer avatar' },
+        },
+      },
+    },
+    '/api/station/requests': {
+      get: {
+        summary: 'Get available song requests',
+        tags: ['AzuraCast'],
+        responses: {
+          '200': { description: 'Available requests' },
+        },
+      },
+      post: {
+        summary: 'Submit song request',
+        tags: ['AzuraCast'],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  songId: { type: 'string' },
+                  requestId: { type: 'integer' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': { description: 'Request submitted' },
+        },
+      },
+    },
+    '/api/station/request/{requestId}': {
+      post: {
+        summary: 'Submit song request by ID',
+        tags: ['AzuraCast'],
+        parameters: [
+          { name: 'requestId', in: 'path', required: true, schema: { type: 'integer' } },
+        ],
+        responses: {
+          '200': { description: 'Request submitted' },
+        },
+      },
+    },
+    '/api/station/listeners': {
+      get: {
+        summary: 'Get current listeners',
+        tags: ['AzuraCast'],
+        responses: {
+          '200': { description: 'Listeners data' },
+        },
+      },
+    },
+    '/api/station/cache/clear': {
+      post: {
+        summary: 'Clear station cache',
+        tags: ['AzuraCast'],
+        responses: {
+          '200': { description: 'Cache cleared' },
         },
       },
     },

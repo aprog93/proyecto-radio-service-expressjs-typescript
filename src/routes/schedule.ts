@@ -1,11 +1,19 @@
 import { Router, Request, Response } from 'express';
 
 import { ScheduleService } from '../services/schedule.js';
+import { AuthService } from '../services/auth.js';
 import { authenticateToken, requireAdmin } from '../middleware/authMiddleware.js';
 
 export function createScheduleRouter(): Router {
   const router = Router();
   const scheduleService = new ScheduleService();
+  const authService = new AuthService();
+
+  // Inject authService for middleware
+  router.use((req: Request, _res: Response, next: Function) => {
+    req.authService = authService;
+    next();
+  });
 
   // GET /api/schedule - Obtiene toda la programación
   router.get('/', async (req: Request, res: Response) => {

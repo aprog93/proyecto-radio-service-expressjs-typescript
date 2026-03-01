@@ -10,6 +10,12 @@ export function createUserRouter(): Router {
   const authService = new AuthService();
   const profileService = new UserProfileService();
 
+  // Middleware para inyectar authService (necesario para authenticateToken)
+  router.use((req, res, next) => {
+    req.authService = authService;
+    next();
+  });
+
   /**
    * GET /api/users/profile
    * Obtiene el perfil del usuario actual

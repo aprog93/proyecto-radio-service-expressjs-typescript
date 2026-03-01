@@ -1,12 +1,20 @@
 import { Router, Request, Response } from 'express';
 
 import { NewsService } from '../services/news.js';
+import { AuthService } from '../services/auth.js';
 import { authenticateToken, requireAdmin } from '../middleware/authMiddleware.js';
 import { CreateNewsRequest } from '../types/database.js';
 
 export function createNewsRouter(): Router {
   const router = Router();
   const newsService = new NewsService();
+  const authService = new AuthService();
+
+  // Inject authService for middleware
+  router.use((req: Request, _res: Response, next: Function) => {
+    req.authService = authService;
+    next();
+  });
 
   // GET / - Obtiene noticias publicadas
   router.get('/', async (req: Request, res: Response) => {

@@ -1,11 +1,19 @@
 import { Router, Request, Response } from 'express';
 import { BlogService } from '../services/blog.js';
+import { AuthService } from '../services/auth.js';
 import { authenticateToken, requireAdmin } from '../middleware/authMiddleware.js';
 import { CreateBlogRequest } from '../types/database.js';
 
 export function createBlogRouter(): Router {
   const router = Router();
   const blogService = new BlogService();
+  const authService = new AuthService();
+
+  // Inject authService for middleware
+  router.use((req: Request, _res: Response, next: Function) => {
+    req.authService = authService;
+    next();
+  });
 
   /**
    * GET /api/blogs
