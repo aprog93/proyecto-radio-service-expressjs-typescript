@@ -153,22 +153,40 @@ export function createAdminRouter(): Router {
   });
 
    // GET /api/admin/stats
-   router.get('/stats', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
-     try {
-       console.log('[ROUTE] GET /api/admin/stats - Starting');
-       const stats = await adminService.getStats();
-       console.log('[ROUTE] GET /api/admin/stats - Got stats:', { hasData: !!stats });
+    router.get('/stats', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
+      try {
+        console.log('[ROUTE] GET /api/admin/stats - Starting');
+        const stats = await adminService.getStats();
+        console.log('[ROUTE] GET /api/admin/stats - Got stats:', { hasData: !!stats });
 
-       res.json({
-         success: true,
-         data: stats,
-       });
-     } catch (err) {
-       const message = err instanceof Error ? err.message : 'Error al obtener estadísticas';
-       console.error('[ROUTE] GET /api/admin/stats - ERROR:', err);
-       res.status(500).json({ success: false, error: message });
-     }
-   });
+        res.json({
+          success: true,
+          data: stats,
+        });
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Error al obtener estadísticas';
+        console.error('[ROUTE] GET /api/admin/stats - ERROR:', err);
+        res.status(500).json({ success: false, error: message });
+      }
+    });
+
+    // GET /api/admin/stats/live - DB + AzuraCast combined
+    router.get('/stats/live', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
+      try {
+        console.log('[ROUTE] GET /api/admin/stats/live - Starting');
+        const liveStats = await adminService.getLiveStats();
+        console.log('[ROUTE] GET /api/admin/stats/live - Got live stats:', { hasData: !!liveStats });
+
+        res.json({
+          success: true,
+          data: liveStats,
+        });
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Error al obtener estadísticas en vivo';
+        console.error('[ROUTE] GET /api/admin/stats/live - ERROR:', err);
+        res.status(500).json({ success: false, error: message });
+      }
+    });
 
   return router;
 }

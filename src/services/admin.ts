@@ -1,6 +1,7 @@
 import { prisma } from '../config/prisma.js';
 import { User, UserRole } from '../types/database.js';
 import { Prisma } from '../generated/prisma/index.js';
+import { AzuraCastService } from './azuracast.js';
 
 /**
  * Interfaz para estadísticas del sistema
@@ -21,6 +22,31 @@ export interface SystemStats {
   totalDonations: {
     count: number;
     amount: number;
+  };
+}
+
+/**
+ * Interfaz para estadísticas en vivo (BD + AzuraCast)
+ */
+export interface LiveStats extends SystemStats {
+  azuracast: {
+    currentListeners: number;
+    totalListeners: number;
+    isOnline: boolean;
+    nowPlaying: {
+      artist: string;
+      title: string;
+      album?: string;
+      art?: string;
+      duration?: number;
+      elapsed?: number;
+    } | null;
+    station: {
+      name: string;
+      description: string;
+      bitrate: number;
+      format: string;
+    };
   };
 }
 
@@ -178,6 +204,73 @@ export class AdminService {
       console.error('[AdminService] Error in _getDonationsAmount():', err);
       // Return 0 if table doesn't exist or other error occurs
       return 0;
+    }
+  }
+
+  /**
+   * Obtiene estadísticas en vivo (BD + AzuraCast)
+   */
+  async getLiveStats(): Promise<LiveStats> {
+    try {
+      console.log('[AdminService] Starting getLiveStats()');
+      
+      // Get database stats first
+      const dbStats = await this.getStats();
+      
+      // Get AzuraCast data in parallel
+      let azuracatData = {
+        currentListeners: 0,
+        totalListeners: 0,
+        isOnline: false,
+        nowPlaying: null as any,
+        station: {
+          name: 'N/A',
+          description: 'N/A',
+          bitrate: 0,
+          format: 'N/A',
+        },
+      };
+
+      try {
+        const nowPlayingData = await AzuraCastService.getNowPlaying();
+        
+        if (nowPlayingData) {
+          const data = nowPlayingData as any; // API response includes additional fields
+          azuracatData = {
+            currentListeners: data.listeners?.current || 0,
+            totalListeners: data.listeners?.total || 0,
+            isOnline: data.is_online !== undefined ? data.is_online : true,
+            nowPlaying: data.now_playing ? {
+              artist: data.now_playing.song?.artist || 'Desconocido',
+              title: data.now_playing.song?.title || 'Desconocido',
+              album: data.now_playing.song?.album || undefined,
+              art: data.now_playing.song?.art || undefined,
+              duration: data.now_playing.duration,
+              elapsed: data.now_playing.elapsed,
+            } : null,
+            station: {
+              name: data.station?.name || 'N/A',
+              description: data.station?.description || 'N/A',
+              bitrate: data.station?.mounts?.[0]?.bitrate || 320,
+              format: data.station?.mounts?.[0]?.format || 'MP3',
+            },
+          };
+        }
+      } catch (err) {
+        console.warn('[AdminService] Could not fetch AzuraCast data:', err instanceof Error ? err.message : 'Unknown error');
+        // Continue with offline AzuraCast data
+      }
+
+      const liveStats: LiveStats = {
+        ...dbStats,
+        azuracast: azuracatData,
+      };
+
+      console.log('[AdminService] getLiveStats() completed successfully');
+      return liveStats;
+    } catch (err) {
+      console.error('[AdminService] Error in getLiveStats():', err);
+      throw err;
     }
   }
 }
