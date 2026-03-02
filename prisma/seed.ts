@@ -1,4 +1,5 @@
 import { prisma } from '../src/config/prisma.js';
+import bcrypt from 'bcryptjs';
 
 async function main() {
   console.log('🌱 Iniciando seed de datos...\n');
@@ -13,7 +14,7 @@ async function main() {
       create: {
         email: 'admin.principal@radiocesar.com',
         displayName: 'Admin Principal',
-        password: 'Admin123!',
+        password: bcrypt.hashSync('Admin123!', 10),
         role: 'admin',
         isActive: true,
       },
@@ -25,7 +26,7 @@ async function main() {
       create: {
         email: 'admin.contenidos@radiocesar.com',
         displayName: 'Admin Contenidos',
-        password: 'AdminContent123!',
+        password: bcrypt.hashSync('AdminContent123!', 10),
         role: 'admin',
         isActive: true,
       },
@@ -38,7 +39,7 @@ async function main() {
       create: {
         email: 'juan.perez@example.com',
         displayName: 'Juan Pérez',
-        password: 'Listener123!',
+        password: bcrypt.hashSync('Listener123!', 10),
         role: 'listener',
         isActive: true,
       },
@@ -50,7 +51,7 @@ async function main() {
       create: {
         email: 'maria.garcia@example.com',
         displayName: 'María García',
-        password: 'Listener123!',
+        password: bcrypt.hashSync('Listener123!', 10),
         role: 'listener',
         isActive: true,
       },
@@ -62,7 +63,7 @@ async function main() {
       create: {
         email: 'carlos.rodriguez@example.com',
         displayName: 'Carlos Rodríguez',
-        password: 'Listener123!',
+        password: bcrypt.hashSync('Listener123!', 10),
         role: 'listener',
         isActive: false,
       },
