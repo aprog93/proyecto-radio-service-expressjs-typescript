@@ -35,7 +35,7 @@ export function createProductRouter(): Router {
 
       res.json({
         success: true,
-        data: products,
+        products,
         total,
         page,
         limit,

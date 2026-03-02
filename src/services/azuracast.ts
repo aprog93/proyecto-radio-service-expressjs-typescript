@@ -260,14 +260,14 @@ export class AzuraCastService {
   static async getHistory(
     page: number = 1,
     limit: number = 50
-  ): Promise<AzuraHistoryResponse | AzuraHistoryArrayResponse> {
+  ): Promise<AzuraHistoryResponse> {
     const cacheKey = `azura:${STATION_ID}:history:${page}:${limit}`;
-    const cached = cache.get<AzuraHistoryResponse | AzuraHistoryArrayResponse>(cacheKey);
+    const cached = cache.get<AzuraHistoryResponse>(cacheKey);
     
     if (cached) return cached;
 
     try {
-      const response = await client.get<AzuraHistoryArrayResponse>(
+      const response = await client.get<AzuraHistoryResponse>(
         `/station/${STATION_ID}/history`,
         { params: { page, limit } }
       );

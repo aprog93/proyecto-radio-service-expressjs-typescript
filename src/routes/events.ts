@@ -26,9 +26,10 @@ export function createEventRouter(): Router {
 
       const { events, total } = await eventService.getPublishedEvents(page, limit, search, upcoming);
 
+      // Return in format expected by frontend: { events: [], total: number }
       res.json({
         success: true,
-        data: events,
+        events,
         total,
         page,
         limit,

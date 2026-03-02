@@ -12,27 +12,34 @@ export function createAdminRouter(): Router {
   const profileService = new UserProfileService();
   const adminService = new AdminService();
 
-  // GET /api/admin/users
-  router.get('/users', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
-    try {
-      const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 20;
-      const search = req.query.search as string | undefined;
-
-      const { users, total } = await adminService.listUsers(page, limit, search);
-
-      res.json({
-        success: true,
-        data: users,
-        total,
-        page,
-        limit,
-      });
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Error al obtener usuarios';
-      res.status(500).json({ success: false, error: message });
-    }
+  // Middleware to attach authService to request object
+  router.use((req: Request, res, next) => {
+    req.authService = authService;
+    next();
   });
+
+   // GET /api/admin/users
+   router.get('/users', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
+     try {
+       const page = Number(req.query.page) || 1;
+       const limit = Number(req.query.limit) || 20;
+       const search = req.query.search as string | undefined;
+
+       const { users, total } = await adminService.listUsers(page, limit, search);
+
+       res.json({
+         success: true,
+         data: users,
+         total,
+         page,
+         limit,
+       });
+     } catch (err) {
+       const message = err instanceof Error ? err.message : 'Error al obtener usuarios';
+       console.error('Error in GET /api/admin/users:', err);
+       res.status(500).json({ success: false, error: message });
+     }
+   });
 
   // GET /api/admin/users/:id
   router.get('/users/:id', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
@@ -145,20 +152,23 @@ export function createAdminRouter(): Router {
     }
   });
 
-  // GET /api/admin/stats
-  router.get('/stats', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
-    try {
-      const stats = await adminService.getStats();
+   // GET /api/admin/stats
+   router.get('/stats', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
+     try {
+       console.log('[ROUTE] GET /api/admin/stats - Starting');
+       const stats = await adminService.getStats();
+       console.log('[ROUTE] GET /api/admin/stats - Got stats:', { hasData: !!stats });
 
-      res.json({
-        success: true,
-        data: stats,
-      });
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Error al obtener estadísticas';
-      res.status(500).json({ success: false, error: message });
-    }
-  });
+       res.json({
+         success: true,
+         data: stats,
+       });
+     } catch (err) {
+       const message = err instanceof Error ? err.message : 'Error al obtener estadísticas';
+       console.error('[ROUTE] GET /api/admin/stats - ERROR:', err);
+       res.status(500).json({ success: false, error: message });
+     }
+   });
 
   return router;
 }

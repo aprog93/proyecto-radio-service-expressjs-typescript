@@ -27,7 +27,7 @@ export function createNewsRouter(): Router {
 
       res.json({
         success: true,
-        data: news,
+        news,
         total,
         page,
         limit,

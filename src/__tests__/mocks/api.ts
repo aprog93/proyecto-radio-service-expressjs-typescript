@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import type { Mock } from 'vitest';
 import axios from 'axios';
-import { mockAzuraNowPlayingResponse, mockAzuraPlaylist, azuracastApiError } from '../fixtures/azuracast.js';
+import { mockAzuraNowPlayingResponse, azuracastApiError } from '../fixtures/azuracast.js';
 
 /**
  * Mock axios for AzuraCast API calls
@@ -40,13 +40,7 @@ export function setupSuccessfulAzuracastMocks() {
         statusText: 'OK',
       });
     }
-    if (url.includes('playlists')) {
-      return Promise.resolve({
-        data: [mockAzuraPlaylist],
-        status: 200,
-        statusText: 'OK',
-      });
-    }
+    // Other endpoints not mocked will fail
     return Promise.reject(new Error('Endpoint not mocked'));
   });
 

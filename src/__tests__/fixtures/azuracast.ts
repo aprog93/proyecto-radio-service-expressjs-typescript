@@ -18,9 +18,6 @@ import {
   AzuraStationInfo,
   AzuraStationInfoResponse,
   AzuraStationListItem,
-  // Playlists
-  AzuraPlaylistsResponse,
-  AzuraPlaylistSongsResponse,
   // History
   AzuraHistoryResponse,
   // On-Demand
@@ -185,41 +182,6 @@ export const mockAzuraStationListItem: AzuraStationListItem = {
 };
 
 export const testAzuraStations: AzuraStationListItem[] = [mockAzuraStationListItem];
-
-// ============================================
-// Playlists
-// ============================================
-
-export const mockAzuraPlaylist: AzuraPlaylistsResponse = {
-  id: 1,
-  name: 'Default Playlist',
-  is_enabled: true,
-  songs_count: 500,
-  is_jingle: false,
-  is_request: false,
-};
-
-export const mockAzuraPlaylistJingles: AzuraPlaylistsResponse = {
-  id: 2,
-  name: 'Jingles',
-  is_enabled: true,
-  songs_count: 25,
-  is_jingle: true,
-  is_request: false,
-};
-
-export const mockAzuraPlaylistSong: AzuraPlaylistSongsResponse = {
-  id: 1001,
-  song_id: '123456',
-  playlist_id: 1,
-  position: 0,
-  weight: 1,
-  played_at: Math.floor(Date.now() / 1000),
-  song: mockAzuraSong,
-};
-
-export const testAzuraPlaylists: AzuraPlaylistsResponse[] = [mockAzuraPlaylist, mockAzuraPlaylistJingles];
-export const testAzuraPlaylistSongs: AzuraPlaylistSongsResponse[] = [mockAzuraPlaylistSong];
 
 // ============================================
 // History
@@ -416,6 +378,8 @@ export const mockAzuraBackendStatus = {
 };
 
 export const mockAzuraSystemStatusResponse: AzuraSystemStatusResponse = {
+  online: true,
+  timestamp: Date.now(),
   needs_restart: false,
   frontends: [mockAzuraFrontendStatus],
   backends: [mockAzuraBackendStatus],
@@ -426,7 +390,11 @@ export const mockAzuraSystemStatusResponse: AzuraSystemStatusResponse = {
 // ============================================
 
 export const mockAzuraTimeResponse: AzuraTimeResponse = {
-  utc_time: new Date().toISOString(),
+  timestamp: Date.now(),
+  utc_datetime: new Date().toISOString(),
+  utc_date: new Date().toISOString().split('T')[0],
+  utc_time: new Date().toTimeString(),
+  utc_json: new Date().toISOString(),
   timezone: 'America/Bogota',
   unix_time: Math.floor(Date.now() / 1000),
 };

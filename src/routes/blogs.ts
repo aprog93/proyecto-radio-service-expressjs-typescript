@@ -35,7 +35,7 @@ export function createBlogRouter(): Router {
 
       res.json({
         success: true,
-        data: blogs,
+        blogs,
         total,
         page,
         limit,

@@ -346,7 +346,6 @@ export interface AzuraTimeResponse {
   utc_time: string;
   utc_json: string;
   // Alternative format (may not be available)
-  utc_time?: string;
   timezone?: string;
   unix_time?: number;
 }
