@@ -1,4 +1,4 @@
-import { PrismaClient } from '@/generated/prisma';
+import { PrismaClient } from '@prisma/client';
 
 /**
  * Instancia única de PrismaClient para toda la aplicación

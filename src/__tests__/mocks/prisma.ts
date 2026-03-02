@@ -118,7 +118,7 @@ export const resetPrismaMocks = () => {
  */
 export const setupPrismaTest = () => {
   // Mock del módulo de Prisma
-  vi.mock('@/generated/prisma', () => ({
+  vi.mock('@prisma/client', () => ({
     PrismaClient: vi.fn(() => mockPrisma),
   }));
 
