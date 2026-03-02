@@ -6,7 +6,7 @@ import { initializeSchema } from './schema.js';
 import { DatabaseWrapper } from './db-wrapper.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DB_PATH = path.join(__dirname, '../../data/radio_cesar.db');
+const DB_PATH = path.join(__dirname, '../../data/radio_comunitaria.db');
 
 // SqlJs constructor type
 type SqlJsConstructor = Awaited<ReturnType<typeof initSqlJs>>;

@@ -102,7 +102,7 @@ cd service && pnpm lint
 ### Docker
 ```bash
 # PostgreSQL
-docker run -d --name radio-postgres -e POSTGRES_PASSWORD=radio123 -e POSTGRES_DB=radio_cesar -p 5433:5432 postgres:16-alpine
+docker run -d --name radio-postgres -e POSTGRES_PASSWORD=radio123 -e POSTGRES_DB=radio_cesar -p 5434:5432 postgres:16-alpine
 
 # Backend
 docker build -t radio-cesar-backend .
