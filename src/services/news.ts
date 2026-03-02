@@ -1,6 +1,6 @@
 import { prisma } from '../config/prisma.js';
 import { News, CreateNewsRequest } from '../types/database.js';
-import { Prisma } from '../generated/prisma/index.js';
+import { Prisma } from '@prisma/client';
 
 /**
  * Tipo interno para datos crudos de News desde Prisma

@@ -1,6 +1,6 @@
 import { prisma } from '../config/prisma.js';
 import { User, UserRole } from '../types/database.js';
-import { Prisma } from '../generated/prisma/index.js';
+import { Prisma } from '@prisma/client';
 import { AzuraCastService } from './azuracast.js';
 
 /**

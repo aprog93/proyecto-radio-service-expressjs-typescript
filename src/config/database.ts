@@ -1,11 +1,10 @@
 import initSqlJs, { Database as SqlJsDatabase } from 'sql.js';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { initializeSchema } from './schema.js';
 import { DatabaseWrapper } from './db-wrapper.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(__filename);
 const DB_PATH = path.join(__dirname, '../../data/radio_comunitaria.db');
 
 // SqlJs constructor type

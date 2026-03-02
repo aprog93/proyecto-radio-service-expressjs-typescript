@@ -1,6 +1,6 @@
 import { prisma } from '../config/prisma.js';
 import { Event, CreateEventRequest } from '../types/database.js';
-import { Prisma } from '../generated/prisma/index.js';
+import { Prisma } from '@prisma/client';
 
 /**
  * Tipo interno para datos crudos de Event desde Prisma

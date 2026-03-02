@@ -31,9 +31,14 @@ export function createApp(): Express {
   // Swagger UI
   setupSwagger(app);
 
+  // CORS - permite múltiples orígenes para desarrollo local y Docker
+  const corsOrigins = process.env.CORS_ORIGIN 
+    ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
+    : ['http://localhost:5173', 'http://localhost:3006'];
+  
   app.use(
     cors({
-      origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+      origin: corsOrigins,
       credentials: true,
     })
   );
